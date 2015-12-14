@@ -137,6 +137,7 @@ LayoutBuilder.prototype.tryLayoutDocument = function (docStructure, fontProvider
   });
 
   this.addBackground(background);
+  this.writer.footerMode = null;
   this.processNode(docStructure);
   this.addHeadersAndFooters(header, footer);
   /* jshint eqnull:true */
@@ -170,7 +171,8 @@ LayoutBuilder.prototype.addDynamicRepeatable = function(nodeGetter, sizeFunction
   for(var pageIndex = 0, l = pages.length; pageIndex < l; pageIndex++) {
     this.writer.context().page = pageIndex;
 
-    var node = nodeGetter(pageIndex + 1, l);
+    var node = nodeGetter(pageIndex + 1, l, this.writer.context().pages[pageIndex].footerMode);
+  //  var node = nodeGetter(pageIndex + 1, l);
 
     if (node) {
       var sizes = sizeFunction(this.writer.context().getCurrentPage().pageSize, this.pageMargins);
@@ -294,6 +296,9 @@ LayoutBuilder.prototype.processNode = function(node) {
 
   this.linearNodeList.push(node);
   decorateNode(node);
+
+  this.writer.footerMode = node.footerMode || this.writer.footerMode;
+  this.writer.context().pages[this.writer.context().page].footerMode = this.writer.footerMode;
 
   applyMargins(function() {
     var absPosition = node.absolutePosition;
