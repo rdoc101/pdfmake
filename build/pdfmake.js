@@ -57,7 +57,7 @@
 	'use strict';
 
 	var PdfPrinter = __webpack_require__(6);
-	var FileSaver = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../../libs/FileSaver.js/FileSaver\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var FileSaver = __webpack_require__(103);
 	var saveAs = FileSaver.saveAs;
 
 	var defaultClientFonts = {
@@ -147,7 +147,7 @@
 	           blob = new Blob([result], { type: 'application/pdf' });
 	       }
 	       catch (e) {
-	           // Old browser which can't handle it without making it an byte array (ie10)
+	           // Old browser which can't handle it without making it an byte array (ie10) 
 	           if (e.name == "InvalidStateError") {
 	               var byteArray = new Uint8Array(result);
 	               blob = new Blob([byteArray.buffer], { type: 'application/pdf' });
@@ -2077,7 +2077,7 @@
 		this.pdfKitDoc = new PdfKit({ size: [ pageSize.width, pageSize.height ], compress: false});
 		this.pdfKitDoc.info.Producer = 'pdfmake';
 		this.pdfKitDoc.info.Creator = 'pdfmake';
-
+		
 		// pdf kit maintains the uppercase fieldnames from pdf spec
 		// to keep the pdfmake api consistent, the info field are defined lowercase
 		if(docDefinition.info){
@@ -2088,7 +2088,7 @@
 			this.pdfKitDoc.info.Subject = docDefinition.info.subject ? docDefinition.info.subject : null;
 			this.pdfKitDoc.info.Keywords = docDefinition.info.keywords ? docDefinition.info.keywords : null;
 		}
-
+		
 		this.fontProvider = new FontProvider(this.fontDescriptors, this.pdfKitDoc);
 
 	  docDefinition.images = docDefinition.images || {};
@@ -15623,7 +15623,7 @@
 		} else if (typeof node == 'string' || node instanceof String) {
 			node = { text: node };
 		}
-
+		
 		// Deal with empty nodes to prevent crash in getNodeMargin
 		if (Object.keys(node).length === 0) {
 			// A warning could be logged: console.warn('pdfmake: Empty node, ignoring it');
@@ -15723,7 +15723,7 @@
 					margin = convertMargin(flattenedStyleArray.margin);
 				}
 			}
-
+			
 			margin = processSingleMargins(node, margin);
 
 			if(node.margin){
@@ -17449,7 +17449,7 @@
 	//   modules, so it is better not to alter this value unless you know what
 	//   you're doing.
 	function buildCanvas(data, options) {
-
+	   
 	    var canvas = [];
 	    var background = data.background || '#fff';
 	    var foreground = data.foreground || '#000';
@@ -17458,12 +17458,12 @@
 		var n = matrix.length;
 		var modSize = Math.floor( options.fit ? options.fit/n : 5 );
 		var size = n * modSize;
-
+		
 	    canvas.push({
 	      type: 'rect',
 	      x: 0, y: 0, w: size, h: size, lineWidth: 0, color: background
 	    });
-
+	    
 		for (var i = 0; i < n; ++i) {
 			for (var j = 0; j < n; ++j) {
 	            if(matrix[i][j]) {
@@ -17479,12 +17479,12 @@
 	            }
 	        }
 	    }
-
+	    
 	    return {
 	        canvas: canvas,
 	        size: size
 	    };
-
+			
 	}
 
 	function measure(node) {
@@ -17839,9 +17839,9 @@
 	};
 
 	PageElementWriter.prototype.moveToNextPage = function(pageOrientation) {
-
+		
 		var nextPage = this.writer.context.moveToNextPage(pageOrientation);
-
+		
 	  if (nextPage.newPageCreated) {
 			this.repeatables.forEach(function(rep) {
 				this.writer.addFragment(rep, true);
@@ -22521,7 +22521,7 @@
 	function Zlib(mode) {
 	  if (mode < exports.DEFLATE || mode > exports.UNZIP)
 	    throw new TypeError("Bad argument");
-
+	    
 	  this.mode = mode;
 	  this.init_done = false;
 	  this.write_in_progress = false;
@@ -22539,18 +22539,18 @@
 	  this.memLevel = memLevel;
 	  this.strategy = strategy;
 	  // dictionary not supported.
-
+	  
 	  if (this.mode === exports.GZIP || this.mode === exports.GUNZIP)
 	    this.windowBits += 16;
-
+	    
 	  if (this.mode === exports.UNZIP)
 	    this.windowBits += 32;
-
+	    
 	  if (this.mode === exports.DEFLATERAW || this.mode === exports.INFLATERAW)
 	    this.windowBits = -this.windowBits;
-
+	    
 	  this.strm = new zstream();
-
+	  
 	  switch (this.mode) {
 	    case exports.DEFLATE:
 	    case exports.GZIP:
@@ -22576,12 +22576,12 @@
 	    default:
 	      throw new Error("Unknown mode " + this.mode);
 	  }
-
+	  
 	  if (status !== exports.Z_OK) {
 	    this._error(status);
 	    return;
 	  }
-
+	  
 	  this.write_in_progress = false;
 	  this.init_done = true;
 	};
@@ -22593,31 +22593,31 @@
 	Zlib.prototype._writeCheck = function() {
 	  if (!this.init_done)
 	    throw new Error("write before init");
-
+	    
 	  if (this.mode === exports.NONE)
 	    throw new Error("already finalized");
-
+	    
 	  if (this.write_in_progress)
 	    throw new Error("write already in progress");
-
+	    
 	  if (this.pending_close)
 	    throw new Error("close is pending");
 	};
 
-	Zlib.prototype.write = function(flush, input, in_off, in_len, out, out_off, out_len) {
+	Zlib.prototype.write = function(flush, input, in_off, in_len, out, out_off, out_len) {    
 	  this._writeCheck();
 	  this.write_in_progress = true;
-
+	  
 	  var self = this;
 	  process.nextTick(function() {
 	    self.write_in_progress = false;
 	    var res = self._write(flush, input, in_off, in_len, out, out_off, out_len);
 	    self.callback(res[0], res[1]);
-
+	    
 	    if (self.pending_close)
 	      self.close();
 	  });
-
+	  
 	  return this;
 	};
 
@@ -22635,7 +22635,7 @@
 
 	Zlib.prototype._write = function(flush, input, in_off, in_len, out, out_off, out_len) {
 	  this.write_in_progress = true;
-
+	  
 	  if (flush !== exports.Z_NO_FLUSH &&
 	      flush !== exports.Z_PARTIAL_FLUSH &&
 	      flush !== exports.Z_SYNC_FLUSH &&
@@ -22644,18 +22644,18 @@
 	      flush !== exports.Z_BLOCK) {
 	    throw new Error("Invalid flush value");
 	  }
-
+	  
 	  if (input == null) {
 	    input = new Buffer(0);
 	    in_len = 0;
 	    in_off = 0;
 	  }
-
+	  
 	  if (out._set)
 	    out.set = out._set;
 	  else
 	    out.set = bufferSet;
-
+	  
 	  var strm = this.strm;
 	  strm.avail_in = in_len;
 	  strm.input = input;
@@ -22663,7 +22663,7 @@
 	  strm.avail_out = out_len;
 	  strm.output = out;
 	  strm.next_out = out_off;
-
+	  
 	  switch (this.mode) {
 	    case exports.DEFLATE:
 	    case exports.GZIP:
@@ -22679,11 +22679,11 @@
 	    default:
 	      throw new Error("Unknown mode " + this.mode);
 	  }
-
+	  
 	  if (status !== exports.Z_STREAM_END && status !== exports.Z_OK) {
 	    this._error(status);
 	  }
-
+	  
 	  this.write_in_progress = false;
 	  return [strm.avail_in, strm.avail_out];
 	};
@@ -22693,15 +22693,15 @@
 	    this.pending_close = true;
 	    return;
 	  }
-
+	  
 	  this.pending_close = false;
-
+	  
 	  if (this.mode === exports.DEFLATE || this.mode === exports.GZIP || this.mode === exports.DEFLATERAW) {
 	    zlib_deflate.deflateEnd(this.strm);
 	  } else {
 	    zlib_inflate.inflateEnd(this.strm);
 	  }
-
+	  
 	  this.mode = exports.NONE;
 	};
 
@@ -22716,7 +22716,7 @@
 	      var status = zlib_inflate.inflateReset(this.strm);
 	      break;
 	  }
-
+	  
 	  if (status !== exports.Z_OK) {
 	    this._error(status);
 	  }
@@ -22724,7 +22724,7 @@
 
 	Zlib.prototype._error = function(status) {
 	  this.onerror(msg[status] + ': ' + this.strm.msg, status);
-
+	  
 	  this.write_in_progress = false;
 	  if (this.pending_close)
 	    this.close();
@@ -30523,7 +30523,7 @@
 	      this._fontSize = 12;
 	      this._font = null;
 	      this._registeredFonts = {};
-
+	      
 	    },
 	    font: function(src, family, size) {
 	      var cacheKey, font, id, ref;
@@ -31624,12 +31624,12 @@
 	 * An implementation of Ruby's string.succ method.
 	 * By Devon Govett
 	 *
-	 * Returns the successor to str. The successor is calculated by incrementing characters starting
+	 * Returns the successor to str. The successor is calculated by incrementing characters starting 
 	 * from the rightmost alphanumeric (or the rightmost character if there are no alphanumerics) in the
 	 * string. Incrementing a digit always results in another digit, and incrementing a letter results in
 	 * another letter of the same case.
 	 *
-	 * If the increment generates a carry, the character to the left of it is incremented. This
+	 * If the increment generates a carry, the character to the left of it is incremented. This 
 	 * process repeats until there is no carry, adding an additional character if necessary.
 	 *
 	 * succ("abcd")      == "abce"
@@ -67082,20 +67082,20 @@
 	/*
 	# MIT LICENSE
 	# Copyright (c) 2011 Devon Govett
-	#
-	# Permission is hereby granted, free of charge, to any person obtaining a copy of this
-	# software and associated documentation files (the "Software"), to deal in the Software
-	# without restriction, including without limitation the rights to use, copy, modify, merge,
-	# publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
+	# 
+	# Permission is hereby granted, free of charge, to any person obtaining a copy of this 
+	# software and associated documentation files (the "Software"), to deal in the Software 
+	# without restriction, including without limitation the rights to use, copy, modify, merge, 
+	# publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons 
 	# to whom the Software is furnished to do so, subject to the following conditions:
-	#
-	# The above copyright notice and this permission notice shall be included in all copies or
+	# 
+	# The above copyright notice and this permission notice shall be included in all copies or 
 	# substantial portions of the Software.
-	#
-	# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-	# BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-	# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-	# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	# 
+	# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING 
+	# BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
+	# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
+	# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
 	# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	*/
 
@@ -67667,11 +67667,11 @@
 				if(!curGroup || deco !== curGroup.decoration ||
 						style !== curGroup.decorationStyle || color !== curGroup.decorationColor ||
 						deco === 'lineThrough') {
-
+			
 					curGroup = {
 						line: line,
-						decoration: deco,
-						decorationColor: color,
+						decoration: deco, 
+						decorationColor: color, 
 						decorationStyle: style,
 						inlines: [ inline ]
 					};
@@ -67681,7 +67681,7 @@
 				}
 			}
 		}
-
+		
 		return groups;
 	}
 
@@ -67708,9 +67708,9 @@
 			ascent = biggerInline.font.ascender / 1000 * biggerInline.fontSize,
 			height = biggerInline.height,
 			descent = height - ascent;
-
+		
 		var lw = 0.5 + Math.floor(Math.max(biggerInline.fontSize - 8, 0) / 2) * 0.12;
-
+		
 		switch (group.decoration) {
 			case 'underline':
 				y += lineAscent + descent * 0.45;
@@ -67725,7 +67725,7 @@
 				throw 'Unkown decoration : ' + group.decoration;
 		}
 		pdfKitDoc.save();
-
+		
 		if(group.decorationStyle === 'double') {
 			var gap = Math.max(0.5, lw*2);
 			pdfKitDoc	.fillColor(group.decorationColor)
@@ -67762,7 +67762,7 @@
 					rwx += sh*6;
 				}
 			pdfKitDoc.stroke(group.decorationColor);
-
+			
 		} else {
 			pdfKitDoc	.fillColor(group.decorationColor)
 						.rect(x + firstInline.x, y-lw/2, totalWidth, lw)
@@ -67794,6 +67794,283 @@
 		drawBackground: drawBackground,
 		drawDecorations: drawDecorations
 	};
+
+/***/ },
+/* 103 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* FileSaver.js
+	 * A saveAs() FileSaver implementation.
+	 * 1.1.20150716
+	 *
+	 * By Eli Grey, http://eligrey.com
+	 * License: X11/MIT
+	 *   See https://github.com/eligrey/FileSaver.js/blob/master/LICENSE.md
+	 */
+
+	/*global self */
+	/*jslint bitwise: true, indent: 4, laxbreak: true, laxcomma: true, smarttabs: true, plusplus: true */
+
+	/*! @source http://purl.eligrey.com/github/FileSaver.js/blob/master/FileSaver.js */
+
+	var saveAs = saveAs || (function(view) {
+		"use strict";
+		// IE <10 is explicitly unsupported
+		if (typeof navigator !== "undefined" && /MSIE [1-9]\./.test(navigator.userAgent)) {
+			return;
+		}
+		var
+			  doc = view.document
+			  // only get URL when necessary in case Blob.js hasn't overridden it yet
+			, get_URL = function() {
+				return view.URL || view.webkitURL || view;
+			}
+			, save_link = doc.createElementNS("http://www.w3.org/1999/xhtml", "a")
+			, can_use_save_link = "download" in save_link
+			, click = function(node) {
+				var event = new MouseEvent("click");
+				node.dispatchEvent(event);
+			}
+			, webkit_req_fs = view.webkitRequestFileSystem
+			, req_fs = view.requestFileSystem || webkit_req_fs || view.mozRequestFileSystem
+			, throw_outside = function(ex) {
+				(view.setImmediate || view.setTimeout)(function() {
+					throw ex;
+				}, 0);
+			}
+			, force_saveable_type = "application/octet-stream"
+			, fs_min_size = 0
+			// See https://code.google.com/p/chromium/issues/detail?id=375297#c7 and
+			// https://github.com/eligrey/FileSaver.js/commit/485930a#commitcomment-8768047
+			// for the reasoning behind the timeout and revocation flow
+			, arbitrary_revoke_timeout = 500 // in ms
+			, revoke = function(file) {
+				var revoker = function() {
+					if (typeof file === "string") { // file is an object URL
+						get_URL().revokeObjectURL(file);
+					} else { // file is a File
+						file.remove();
+					}
+				};
+				if (view.chrome) {
+					revoker();
+				} else {
+					setTimeout(revoker, arbitrary_revoke_timeout);
+				}
+			}
+			, dispatch = function(filesaver, event_types, event) {
+				event_types = [].concat(event_types);
+				var i = event_types.length;
+				while (i--) {
+					var listener = filesaver["on" + event_types[i]];
+					if (typeof listener === "function") {
+						try {
+							listener.call(filesaver, event || filesaver);
+						} catch (ex) {
+							throw_outside(ex);
+						}
+					}
+				}
+			}
+			, auto_bom = function(blob) {
+				// prepend BOM for UTF-8 XML and text/* types (including HTML)
+				if (/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(blob.type)) {
+					return new Blob(["\ufeff", blob], {type: blob.type});
+				}
+				return blob;
+			}
+			, FileSaver = function(blob, name, no_auto_bom) {
+				if (!no_auto_bom) {
+					blob = auto_bom(blob);
+				}
+				// First try a.download, then web filesystem, then object URLs
+				var
+					  filesaver = this
+					, type = blob.type
+					, blob_changed = false
+					, object_url
+					, target_view
+					, dispatch_all = function() {
+						dispatch(filesaver, "writestart progress write writeend".split(" "));
+					}
+					// on any filesys errors revert to saving with object URLs
+					, fs_error = function() {
+						// don't create more object URLs than needed
+						if (blob_changed || !object_url) {
+							object_url = get_URL().createObjectURL(blob);
+						}
+						if (target_view) {
+							target_view.location.href = object_url;
+						} else {
+							var new_tab = view.open(object_url, "_blank");
+							if (new_tab == undefined && typeof safari !== "undefined") {
+								//Apple do not allow window.open, see http://bit.ly/1kZffRI
+								view.location.href = object_url
+							}
+						}
+						filesaver.readyState = filesaver.DONE;
+						dispatch_all();
+						revoke(object_url);
+					}
+					, abortable = function(func) {
+						return function() {
+							if (filesaver.readyState !== filesaver.DONE) {
+								return func.apply(this, arguments);
+							}
+						};
+					}
+					, create_if_not_found = {create: true, exclusive: false}
+					, slice
+				;
+				filesaver.readyState = filesaver.INIT;
+				if (!name) {
+					name = "download";
+				}
+				if (can_use_save_link) {
+					object_url = get_URL().createObjectURL(blob);
+					save_link.href = object_url;
+					save_link.download = name;
+					setTimeout(function() {
+						click(save_link);
+						dispatch_all();
+						revoke(object_url);
+						filesaver.readyState = filesaver.DONE;
+					});
+					return;
+				}
+				// Object and web filesystem URLs have a problem saving in Google Chrome when
+				// viewed in a tab, so I force save with application/octet-stream
+				// http://code.google.com/p/chromium/issues/detail?id=91158
+				// Update: Google errantly closed 91158, I submitted it again:
+				// https://code.google.com/p/chromium/issues/detail?id=389642
+				if (view.chrome && type && type !== force_saveable_type) {
+					slice = blob.slice || blob.webkitSlice;
+					blob = slice.call(blob, 0, blob.size, force_saveable_type);
+					blob_changed = true;
+				}
+				// Since I can't be sure that the guessed media type will trigger a download
+				// in WebKit, I append .download to the filename.
+				// https://bugs.webkit.org/show_bug.cgi?id=65440
+				if (webkit_req_fs && name !== "download") {
+					name += ".download";
+				}
+				if (type === force_saveable_type || webkit_req_fs) {
+					target_view = view;
+				}
+				if (!req_fs) {
+					fs_error();
+					return;
+				}
+				fs_min_size += blob.size;
+				req_fs(view.TEMPORARY, fs_min_size, abortable(function(fs) {
+					fs.root.getDirectory("saved", create_if_not_found, abortable(function(dir) {
+						var save = function() {
+							dir.getFile(name, create_if_not_found, abortable(function(file) {
+								file.createWriter(abortable(function(writer) {
+									writer.onwriteend = function(event) {
+										target_view.location.href = file.toURL();
+										filesaver.readyState = filesaver.DONE;
+										dispatch(filesaver, "writeend", event);
+										revoke(file);
+									};
+									writer.onerror = function() {
+										var error = writer.error;
+										if (error.code !== error.ABORT_ERR) {
+											fs_error();
+										}
+									};
+									"writestart progress write abort".split(" ").forEach(function(event) {
+										writer["on" + event] = filesaver["on" + event];
+									});
+									writer.write(blob);
+									filesaver.abort = function() {
+										writer.abort();
+										filesaver.readyState = filesaver.DONE;
+									};
+									filesaver.readyState = filesaver.WRITING;
+								}), fs_error);
+							}), fs_error);
+						};
+						dir.getFile(name, {create: false}, abortable(function(file) {
+							// delete file if it already exists
+							file.remove();
+							save();
+						}), abortable(function(ex) {
+							if (ex.code === ex.NOT_FOUND_ERR) {
+								save();
+							} else {
+								fs_error();
+							}
+						}));
+					}), fs_error);
+				}), fs_error);
+			}
+			, FS_proto = FileSaver.prototype
+			, saveAs = function(blob, name, no_auto_bom) {
+				return new FileSaver(blob, name, no_auto_bom);
+			}
+		;
+		// IE 10+ (native saveAs)
+		if (typeof navigator !== "undefined" && navigator.msSaveOrOpenBlob) {
+			return function(blob, name, no_auto_bom) {
+				if (!no_auto_bom) {
+					blob = auto_bom(blob);
+				}
+				return navigator.msSaveOrOpenBlob(blob, name || "download");
+			};
+		}
+
+		FS_proto.abort = function() {
+			var filesaver = this;
+			filesaver.readyState = filesaver.DONE;
+			dispatch(filesaver, "abort");
+		};
+		FS_proto.readyState = FS_proto.INIT = 0;
+		FS_proto.WRITING = 1;
+		FS_proto.DONE = 2;
+
+		FS_proto.error =
+		FS_proto.onwritestart =
+		FS_proto.onprogress =
+		FS_proto.onwrite =
+		FS_proto.onabort =
+		FS_proto.onerror =
+		FS_proto.onwriteend =
+			null;
+
+		return saveAs;
+	}(
+		   typeof self !== "undefined" && self
+		|| typeof window !== "undefined" && window
+		|| this.content
+	));
+	// `self` is undefined in Firefox for Android content script context
+	// while `this` is nsIContentFrameMessageManager
+	// with an attribute `content` that corresponds to the window
+
+	if (typeof module !== "undefined" && module.exports) {
+	  module.exports.saveAs = saveAs;
+	} else if (("function" !== "undefined" && __webpack_require__(104) !== null) && (__webpack_require__(105) != null)) {
+	  !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function() {
+	    return saveAs;
+	  }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	}
+
+
+/***/ },
+/* 104 */
+/***/ function(module, exports) {
+
+	module.exports = function() { throw new Error("define cannot be used indirect"); };
+
+
+/***/ },
+/* 105 */
+/***/ function(module, exports) {
+
+	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ }
 /******/ ]);
